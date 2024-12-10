@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    {% load static %}
+<head>
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+        body {
+            overflow-y: hidden;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #000000;
+        }
+
+        .page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: #c5a1ff;
+            height: 100vh;
+        }
+
+        .formRegister {
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            border-radius: 7px;
+            padding: 40px;
+            box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .formRegister h1 {
+            position: relative;
+            font-size: 30px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .formRegister h1::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 3px;
+            width: 28px;
+            border-radius: 12px;
+            background: #28a745;
+        }
+
+        .formRegister p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .formRegister input {
+            padding: 15px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            transition: all linear 160ms;
+            outline: none;
+        }
+
+        .formRegister input:focus {
+            border: 1px solid #000000;
+        }
+
+        .formRegister label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .formRegister a {
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #555;
+            transition: all linear 160ms;
+        }
+
+        .formRegister a:hover {
+            transform: scale(1.05);
+            color: #f72585;
+        }
+
+        .btn {
+            background-color: #28a745;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            transition: all linear 160ms;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background-color: #ff0676;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 13px;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none; /* Inicialmente escondido */
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .popup-content {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .popup-content h2 {
+            margin-bottom: 15px;
+            color: #ff0000;
+        }
+
+        .popup-content p {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .popup-content .btn {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .popup-content .btn:hover {
+            background-color: #ff0676;
+        }
+    </style>
+</head>
+<body>
+<div class="popup" id="errorPopup">
+    <div class="popup-content">
+        <h2>Erro no Cadastro</h2>
+        <p id="popupMessage">Por favor, verifique os campos preenchidos e tente novamente.</p>
+        <button class="btn" id="closePopup">Fechar</button>
+    </div>
+</div>
+
+<div class="page">
+    <form method="POST" class="formRegister" id="registerForm">
+        {% csrf_token %}
+        <h1>Cadastro</h1>
+        <p>Preencha os campos abaixo para criar sua conta.</p>
+        
+        <label for="username">Usuário</label>
+        <input type="text" name="username" id="username" placeholder="Digite seu nome de usuário" required />
+        <div class="error-message" id="usernameError">Por favor, preencha o nome de usuário.</div>
+        
+        <label for="email">E-mail</label>
+        <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required />
+        <div class="error-message" id="emailError">Por favor, insira um e-mail válido com domínio.</div>
+        
+        <label for="password1">Senha</label>
+        <input type="password" name="password1" id="password1" placeholder="Digite sua senha" required />
+        <div class="error-message" id="password1Error">A senha deve ter pelo menos 6 caracteres.</div>
+        
+        <label for="password2">Confirme a Senha</label>
+        <input type="password" name="password2" id="password2" placeholder="Confirme sua senha" required />
+        <div class="error-message" id="password2Error">As senhas não correspondem.</div>
+        
+        <input type="submit" value="Cadastrar" class="btn" />
+        
+        <a href="/accounts/login">Já tem uma conta? Faça login.</a>
+    </form>
+</div>
+
+<script>
+document.getElementById("registerForm").addEventListener("submit", function (e) {
+    let hasError = false;
+    const popupMessage = document.getElementById("popupMessage");
+
+    // Limpar mensagens de erro
+    document.querySelectorAll(".error-message").forEach((el) => el.classList.remove("visible"));
+
+    // Validar nome de usuário
+    const username = document.getElementById("username").value.trim();
+    if (username === "") {
+        document.getElementById("usernameError").classList.add("visible");
+        hasError = true;
+    }
+
+    // Validar e-mail
+    const email = document.getElementById("email").value.trim();
+    if (!email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
+        document.getElementById("emailError").classList.add("visible");
+        hasError = true;
+    }
+
+    // Validar senha
+    const password1 = document.getElementById("password1").value;
+    const password2 = document.getElementById("password2").value;
+    if (password1.length < 6) {
+        document.getElementById("password1Error").classList.add("visible");
+        hasError = true;
+    } else if (password1 !== password2) {
+        document.getElementById("password2Error").classList.add("visible");
+        hasError = true;
+    }
+
+    // Mostrar pop-up se houver erro
+    if (hasError) {
+        e.preventDefault();
+        popupMessage.textContent = "Corrija os erros nos campos destacados antes de enviar o formulário.";
+        document.getElementById("errorPopup").style.display = "flex";
+    }
+});
+
+// Fechar pop-up
+document.getElementById("closePopup").addEventListener("click", function () {
+    document.getElementById("errorPopup").style.display = "none";
+});
+</script>
+</body>
+</html>
